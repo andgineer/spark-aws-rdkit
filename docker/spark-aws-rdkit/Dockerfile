@@ -8,9 +8,8 @@ RUN apt-get update -q && \
     apt-get install -q -y \
         bzip2 ca-certificates git libglib2.0-0 libsm6 libxext6 libxrender1 mercurial subversion wget \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh -O miniconda.sh \
+    && rm -rf /var/lib/apt/lists/* \
+    && wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh -O miniconda.sh \
     && echo "${CONDA_MD5}  miniconda.sh" > miniconda.md5 \
     && if ! md5sum --status -c miniconda.md5; then exit 1; fi \
     && mkdir -p /opt \
@@ -30,10 +29,9 @@ RUN conda install mamba -n base -c conda-forge \
     && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "source activate $CONDA_ENV" >> ~/.bashrc
 
-ENV PATH /opt/conda/envs/$CONDA_ENV/bin:$PATH
-ENV CONDA_DEFAULT_ENV $CONDA_ENV
-ENV SPARK_PUBLIC_DNS=docker.for.mac.localhost
+ENV PATH="/opt/conda/envs/$CONDA_ENV/bin:$PATH" \
+    CONDA_DEFAULT_ENV="$CONDA_ENV" \
+    SPARK_PUBLIC_DNS="docker.for.mac.localhost"
 
 SHELL ["/bin/bash", "-c"]
 WORKDIR /
-

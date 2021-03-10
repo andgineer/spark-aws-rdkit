@@ -11,14 +11,14 @@ ENV PYTHONHASHSEED="0" \
 
 ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
-    LC_ALL="en_US.UTF-8" \
-    HADOOP_HOME="/usr/hadoop-$HADOOP_VERSION" \
-    HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop" \
-    PATH="$PATH:$HADOOP_HOME/bin" \
-    SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-without-hadoop" \
-    SPARK_HOME="/usr/spark-${SPARK_VERSION}" \
-    SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*" \
-    PATH="$PATH:${SPARK_HOME}/bin"
+    LC_ALL="en_US.UTF-8"
+
+ENV HADOOP_HOME="/usr/hadoop-$HADOOP_VERSION"
+ENV HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop"
+ENV SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-without-hadoop" \
+    SPARK_HOME="/usr/spark-${SPARK_VERSION}"
+ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
+ENV PATH="$PATH:$HADOOP_HOME/bin:${SPARK_HOME}/bin"
 
 RUN apt-get update \
  && apt-get install -y locales curl unzip \

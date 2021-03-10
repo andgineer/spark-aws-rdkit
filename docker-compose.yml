@@ -1,0 +1,76 @@
+version: "3.0"
+
+services:
+  # Spark Driver
+  spark-master:
+    image: andgineer/spark-aws
+    environment:
+      SPARK_MODE: master
+      SPARK_LOCAL_HOSTNAME: spark-master
+      SPARK_CONF_DIR: /conf/driver
+      SPARK_PUBLIC_DNS: $SPARK_PUBLIC_DNS
+      SPARK_DAEMON_JAVA_OPTS: "-Dspark.deploy.recoveryMode=FILESYSTEM -Dspark.deploy.recoveryDirectory=/recovery"
+      SPARK_RPC_AUTHENTICATION_ENABLED: "no"
+      SPARK_RPC_ENCRYPTION_ENABLED: "no"
+      SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED: "no"
+      SPARK_SSL_ENABLED: "no"
+    ports:
+      - 8080:8080
+      - 7077:7077
+      - 4040:4040
+      - 6066:6066
+    expose:
+      - 7001
+      - 7002
+      - 7003
+      - 7004
+      - 7005
+      - 7077
+      - 6066
+
+  # Spark worker.
+  # Scaling with `docker-compose up --scale spark-worker=n` will map workers' external WebUI ports to random ports in
+  # the range specified in `ports:`.
+  spark-worker:
+    image: andgineer/spark-aws
+    environment:
+      SPARK_CONF_DIR: /conf/worker
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8081
+      SPARK_PUBLIC_DNS: $SPARK_PUBLIC_DNS
+      SPARK_MASTER_URL: spark://spark-master:7077
+      SPARK_RPC_AUTHENTICATION_ENABLED: "no"
+      SPARK_RPC_ENCRYPTION_ENABLED: "no"
+      SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED: "no"
+      SPARK_SSL_ENABLED: "no"
+    links:
+      - spark-master
+    expose:
+      - 7012
+      - 7013
+      - 7014
+      - 7015
+      - 8881
+    ports:
+      - "8081-8200:8081"
+    depends_on:
+      - spark-master
+
+# Spark Submit node with pyspark environment for RDKit
+  submit:
+    image: andgineer/spark-aws-rdkit
+    volumes:
+      - ./src:/src
+    environment:
+      SPARK_MASTER_URL: spark://spark-master:7077
+      SPARK_RPC_AUTHENTICATION_ENABLED: "no"
+      SPARK_RPC_ENCRYPTION_ENABLED: "no"
+      SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED: "no"
+      SPARK_SSL_ENABLED: "no"
+    command: python src/health_check.py
+    depends_on:
+      - spark-master
+      - spark-worker
+
