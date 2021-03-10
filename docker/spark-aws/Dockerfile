@@ -44,4 +44,11 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
+COPY start.sh /
+RUN chmod +x /start.sh
+
+COPY conf /conf
+
+CMD /start.sh
+
 WORKDIR $SPARK_HOME
