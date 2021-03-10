@@ -4,31 +4,29 @@ ARG SPARK_VERSION=3.0.2
 ARG HADOOP_VERSION=3.2.0
 ARG JAVA_JDK=openjdk-8-jre
 
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
 # http://blog.stuart.axelbrooke.com/python-3-on-spark-return-of-the-pythonhashseed
-ENV PYTHONHASHSEED="0" \
-    PYTHONIOENCODING="UTF-8" \
-    PIP_DISABLE_PIP_VERSION_CHECK="1"
+ENV PYTHONHASHSEED 0
+ENV PYTHONIOENCODING UTF-8
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 
-ENV LANG="en_US.UTF-8" \
-    LANGUAGE="en_US:en" \
-    LC_ALL="en_US.UTF-8"
+ENV HADOOP_HOME /usr/hadoop-$HADOOP_VERSION
+ENV HADOOP_CONF_DIR $HADOOP_HOME/etc/hadoop
+ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
+ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
+ENV SPARK_DIST_CLASSPATH $HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*
 
-ENV HADOOP_HOME="/usr/hadoop-$HADOOP_VERSION"
-ENV HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop"
-ENV SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-without-hadoop" \
-    SPARK_HOME="/usr/spark-${SPARK_VERSION}"
-ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
-ENV PATH="$PATH:$HADOOP_HOME/bin:${SPARK_HOME}/bin"
+# For Linux change to "localhost"
+ENV SPARK_PUBLIC_DNS docker.for.mac.localhost
 
-RUN apt-get update \
- && apt-get install -y locales curl unzip \
-    ${JAVA_JDK} telnet dnsutils \
- && dpkg-reconfigure -f noninteractive locales \
- && locale-gen C.UTF-8 \
- && /usr/sbin/update-locale LANG=C.UTF-8 \
- && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
- && locale-gen \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales \
+ && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+ && dpkg-reconfigure --frontend=noninteractive locales \
+ && update-locale LANG=en_US.UTF-8 \
  && mkdir -p /recovery \
+ && apt-get install -y curl unzip ${JAVA_JDK} telnet dnsutils \
  && curl -sL --retry 3 \
   "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" \
   | gunzip \
@@ -49,6 +47,8 @@ RUN chmod +x /start.sh
 
 COPY conf /conf
 
+ENV PATH $PATH:$HADOOP_HOME/bin:${SPARK_HOME}/bin
+SHELL ["/bin/bash", "-c"]
+WORKDIR $SPARK_HOME
 CMD /start.sh
 
-WORKDIR $SPARK_HOME
