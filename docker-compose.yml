@@ -42,7 +42,8 @@ services:
       - "8081:8081"
 
   # Spark second worker.
-  # We cannot scale with `--scale` and `port: "8081-8200:8081"` because we have to set external port explicitly
+  # We cannot scale with `--scale` and `port: "8081-8200:8081"`
+  # if we want Spark Web UI working - it creates links using `SPARK_PUBLIC_DNS`.
   spark-coworker:
     extends:
       file: docker-compose.worker.yml

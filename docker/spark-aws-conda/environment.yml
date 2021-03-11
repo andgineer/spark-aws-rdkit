@@ -1,0 +1,16 @@
+name: spark
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - boto3
+  - numpy
+  - pandas
+  - python
+  - requests
+  - scikit-learn
+  - pyspark
+  - pyyaml
+  - pip
+  - pip:
+    - pyarrow
