@@ -31,5 +31,4 @@ RUN conda install mamba -n base -c conda-forge \
 
 ENV PATH /opt/conda/envs/$CONDA_ENV/bin:$PATH
 ENV CONDA_DEFAULT_ENV $CONDA_ENV
-
-
+ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH
