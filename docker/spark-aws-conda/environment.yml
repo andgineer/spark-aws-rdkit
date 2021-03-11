@@ -6,7 +6,7 @@ dependencies:
   - boto3
   - numpy
   - pandas
-  - python
+  - python=3.7
   - requests
   - scikit-learn
   - pyspark
