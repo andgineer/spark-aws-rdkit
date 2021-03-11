@@ -19,4 +19,8 @@ To start Spark Standalone cluster with two workers locally just fire
     docker-compose up
     
 Spark Web UI will be available on http://localhost:8080
+Now it set up for MacOS, if you are on Linux change `docker.for.mac.localhost` in `.env` to `localhost`.
+
 Set Master in [pyspark](https://realpython.com/pyspark-intro/) to spark://localhost:7077
+
+For faster conda dependency install I use [mamba](https://github.com/mamba-org/mamba).
