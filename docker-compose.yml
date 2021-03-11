@@ -29,34 +29,31 @@ services:
       - 6066
 
   # Spark worker.
-  # Scaling with `docker-compose up --scale spark-worker=n` will map workers' external WebUI ports to random ports in
-  # the range specified in `ports:`.
   spark-worker:
-    image: andgineer/spark-aws-rdkit
+    extends:
+      file: docker-compose.worker.yml
+      service: worker
     environment:
-      SPARK_CONF_DIR: /conf/worker
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 1g
       SPARK_WORKER_PORT: 8881
       SPARK_WORKER_WEBUI_PORT: 8081
-      SPARK_PUBLIC_DNS: $SPARK_PUBLIC_DNS
-      SPARK_MASTER_URL: spark://spark-master:7077
-      SPARK_RPC_AUTHENTICATION_ENABLED: "no"
-      SPARK_RPC_ENCRYPTION_ENABLED: "no"
-      SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED: "no"
-      SPARK_SSL_ENABLED: "no"
-    links:
-      - spark-master
     expose:
-      - 7012
-      - 7013
-      - 7014
-      - 7015
       - 8881
     ports:
-      - "8081-8200:8081"
-    depends_on:
-      - spark-master
+      - "8081:8081"
+
+  # Spark second worker.
+  # We cannot scale with `--scale` and `port: "8081-8200:8081"` because we have to set external port explicitly
+  spark-coworker:
+    extends:
+      file: docker-compose.worker.yml
+      service: worker
+    environment:
+      SPARK_WORKER_PORT: 8882
+      SPARK_WORKER_WEBUI_PORT: 8082
+    expose:
+      - 8882
+    ports:
+      - "8082:8082"
 
 # Spark Submit node with pyspark environment for RDKit
   submit:

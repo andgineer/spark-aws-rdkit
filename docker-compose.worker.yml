@@ -1,0 +1,21 @@
+version: "3.0"
+
+services:
+  # Spark Worker template
+  worker:
+    image: andgineer/spark-aws-rdkit
+    environment:
+      SPARK_CONF_DIR: /conf/worker
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_PUBLIC_DNS: $SPARK_PUBLIC_DNS
+      SPARK_MASTER_URL: spark://spark-master:7077
+      SPARK_RPC_AUTHENTICATION_ENABLED: "no"
+      SPARK_RPC_ENCRYPTION_ENABLED: "no"
+      SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED: "no"
+      SPARK_SSL_ENABLED: "no"
+    expose:
+      - 7012
+      - 7013
+      - 7014
+      - 7015
