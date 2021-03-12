@@ -29,6 +29,8 @@ RUN conda install mamba -n base -c conda-forge \
     && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "source activate $CONDA_ENV" >> ~/.bashrc
 
+VOLUME /python
+
 ENV PATH /opt/conda/envs/$CONDA_ENV/bin:$PATH
 ENV CONDA_DEFAULT_ENV $CONDA_ENV
-ENV PYTHONPATH $SPARK_HOME/python/lib:$PYTHONPATH
+ENV PYTHONPATH $SPARK_HOME/python/lib:$PYTHONPATH:/python/
