@@ -9,6 +9,8 @@ services:
       SPARK_LOCAL_HOSTNAME: spark-master
       SPARK_CONF_DIR: /conf/driver
       SPARK_PUBLIC_DNS: $SPARK_PUBLIC_DNS
+      SPARK_MASTER_PORT: 7077
+      SPARK_MASTER_WEBUI_PORT: 8080
       SPARK_DAEMON_JAVA_OPTS: "-Dspark.deploy.recoveryMode=FILESYSTEM -Dspark.deploy.recoveryDirectory=/recovery"
       SPARK_RPC_AUTHENTICATION_ENABLED: "no"
       SPARK_RPC_ENCRYPTION_ENABLED: "no"
@@ -18,15 +20,13 @@ services:
       - 8080:8080
       - 7077:7077
       - 4040:4040
-      - 6066:6066
     expose:
       - 7001
       - 7002
       - 7003
       - 7004
       - 7005
-      - 7077
-      - 6066
+      - 7006
 
   # Spark worker.
   spark-worker:

@@ -15,7 +15,10 @@ services:
       SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED: "no"
       SPARK_SSL_ENABLED: "no"
     expose:
-      - 7012
-      - 7013
-      - 7014
-      - 7015
+      - 7001
+      - 7002
+      - 7003
+      - 7004
+      - 7005
+      - 7006
+
