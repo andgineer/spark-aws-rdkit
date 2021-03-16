@@ -37,4 +37,5 @@ VOLUME /python
 
 ENV PATH /opt/conda/envs/$CONDA_ENV/bin:/opt/conda/bin:$PATH
 ENV CONDA_DEFAULT_ENV $CONDA_ENV
-ENV PYTHONPATH $SPARK_HOME/python/lib:$PYTHONPATH:/python/
+ENV PYTHONPATH ${SPARK_HOME}/python/:$SPARK_HOME/python/lib:$PYTHONPATH:/python/
+
