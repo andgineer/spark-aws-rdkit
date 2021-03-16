@@ -4,6 +4,7 @@ services:
   # Spark Worker template
   worker:
     image: andgineer/spark-aws-rdkit
+    user: "${USER_NAME}:${USER_GROUP}"
     environment:
       SPARK_CONF_DIR: /conf/worker
       SPARK_WORKER_CORES: 2

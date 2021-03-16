@@ -4,6 +4,7 @@ services:
   # Spark Driver
   spark-master:
     image: andgineer/spark-aws-rdkit
+    user: "${USER_NAME}:${USER_GROUP}"
     volumes:
       - ./src:/python
     environment:
@@ -66,6 +67,7 @@ services:
 # Spark Submit node with pyspark environment for RDKit
   submit:
     image: andgineer/spark-aws-rdkit
+    user: "${USER_NAME}:${USER_GROUP}"
     volumes:
       - ./src:/python
     environment:

@@ -4,6 +4,10 @@ ARG CONDA_VERSION=py37_4.9.2
 ARG CONDA_MD5=3143b1116f2d466d9325c206b7de88f7
 ARG CONDA_ENV=spark
 
+ARG USER_NAME=spark
+
+USER root
+
 RUN apt-get update -q && \
     apt-get install -q -y \
         bzip2 ca-certificates git libglib2.0-0 libsm6 libxext6 libxrender1 mercurial subversion wget \
@@ -18,19 +22,19 @@ RUN apt-get update -q && \
     && ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh \
     && find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.js.map' -delete \
-    && /opt/conda/bin/conda clean -afy
+    && /opt/conda/bin/conda clean -afy \
+    && chown -R $USER_NAME /opt/conda
 
-ENV PATH /opt/conda/bin:$PATH
-
-COPY environment.yml /
-RUN conda install mamba -n base -c conda-forge \
-    && mamba env create --file /environment.yml \
-    && conda info --envs \
-    && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
-    && echo "source activate $CONDA_ENV" >> ~/.bashrc
+USER $USER_NAME
+COPY --chown=${USER_NAME} environment.yml /envs/
+RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
+    && echo "source activate $CONDA_ENV" >> ~/.bashrc \
+    && /opt/conda/bin/conda install mamba -n base -c conda-forge \
+    && /opt/conda/bin/conda info --envs \
+    && /opt/conda/bin/mamba env create --file /envs/environment.yml
 
 VOLUME /python
 
-ENV PATH /opt/conda/envs/$CONDA_ENV/bin:$PATH
+ENV PATH /opt/conda/envs/$CONDA_ENV/bin:/opt/conda/bin:$PATH
 ENV CONDA_DEFAULT_ENV $CONDA_ENV
 ENV PYTHONPATH $SPARK_HOME/python/lib:$PYTHONPATH:/python/

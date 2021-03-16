@@ -7,6 +7,9 @@ ARG JAVA_JDK=openjdk-8-jre
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
+# non-root user for the container
+ARG USER_NAME=spark
+
 # http://blog.stuart.axelbrooke.com/python-3-on-spark-return-of-the-pythonhashseed
 ENV PYTHONHASHSEED 0
 ENV PYTHONIOENCODING UTF-8
@@ -32,23 +35,27 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales 
   | gunzip \
   | tar -x -C /usr \
  && rm -rf $HADOOP_HOME/share/doc \
- && chown -R root:root $HADOOP_HOME \
  && curl -sL --retry 3 \
   "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
   | gunzip \
   | tar x -C /usr/ \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
- && chown -R root:root $SPARK_HOME \
  && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && useradd -ms /bin/bash $USER_NAME \
+ && chown -R $USER_NAME $HADOOP_HOME \
+ && chown -R $USER_NAME $SPARK_HOME \
+ && chown -R $USER_NAME /recovery
 
-COPY start.sh /
-RUN chmod +x /start.sh
+COPY --chown=${USER_NAME} start.sh /scripts/
+RUN chmod +x /scripts/start.sh
+
+USER $USER_NAME
 
 COPY conf /conf
 
 ENV PATH $PATH:$HADOOP_HOME/bin:${SPARK_HOME}/bin
 SHELL ["/bin/bash", "-c"]
 WORKDIR $SPARK_HOME
-CMD /start.sh
+CMD /scripts/start.sh
 

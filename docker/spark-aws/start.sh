@@ -2,6 +2,8 @@
 # may be we need more reliable way to get instance IP reachable in subnet
 LOCAL_IP=$(hostname -I | awk '{print $(NF)}')
 echo "Detected Spark node IP as ${LOCAL_IP}"
+echo "User group: $USER_GROUP"
+echo "User: $(whoami)"
 
 # Spark UI web-links:
 export SPARK_PUBLIC_DNS=${SPARK_PUBLIC_DNS:-$LOCAL_IP}
