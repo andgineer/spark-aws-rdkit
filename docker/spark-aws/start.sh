@@ -1,3 +1,4 @@
+#! /usr/bin/env bash
 # todo looks like a hack (we get last IP from all host IPs)
 # may be we need more reliable way to get instance IP reachable in subnet
 LOCAL_IP=$(hostname -I | awk '{print $(NF)}')

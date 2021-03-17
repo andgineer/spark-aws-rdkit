@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/bin/bash
 #
 # Runs docker-compose with all necessary env vars
 #

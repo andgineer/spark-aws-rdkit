@@ -7,7 +7,7 @@ If you are on Linux change `docker.for.mac.localhost` in `.env` to `localhost`.
 
 After that just
 
-    ./compose.sh up
+    ./compose.sh up --build
     
 That will start Spark Master and two Workers.
 
