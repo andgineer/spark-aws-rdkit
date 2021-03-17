@@ -2,6 +2,8 @@
 
 This is completely functional Spark Standalone cluster.
  
+## docker
+
 Current settings is for Docker on MacOS. 
 If you are on Linux change `docker.for.mac.localhost` in `.env` to `localhost`.
 
@@ -31,3 +33,10 @@ role.
 This will save your time to install it by yourself. It is really very time consuming enterprise.
 
 For faster conda dependency install I use [mamba](https://github.com/mamba-org/mamba).
+
+## AWS ECS
+
+This Apache Spark containers also tested with AWS ESC (Amazon Container Orchestration Service).
+
+See scripts and `README.md` in `aws/`.
+You fill configuration into `environment.sh` and after that you can create Spark cluster in AWS ESC completely automatically.

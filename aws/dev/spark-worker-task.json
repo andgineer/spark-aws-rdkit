@@ -1,0 +1,106 @@
+{
+    "family": "spark-worker",
+    "executionRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "spark-worker",
+            "image": "${WORKER_IMAGE}",
+            "portMappings": [
+                {
+                    "containerPort": 7001,
+                    "hostPort": 7001,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7002,
+                    "hostPort": 7002,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7003,
+                    "hostPort": 7003,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7004,
+                    "hostPort": 7004,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7005,
+                    "hostPort": 7005,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7337,
+                    "hostPort": 7337,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 8081,
+                    "hostPort": 8081,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 8881,
+                    "hostPort": 8881,
+                    "protocol": "tcp"
+                }
+            ],
+           "environment": [
+               {
+                   "name": "SPARK_MASTER_URL",
+                   "value": "spark://${MASTER_FULL_NAME}:7077"
+               },
+              {
+                   "name": "SPARK_LOCAL_IP",
+                   "value": "0.0.0.0"
+               },
+                {
+                    "name": "SPARK_WORKER_WEBUI_PORT",
+                    "value": "8081"
+                },
+                {
+                    "name": "SPARK_WORKER_PORT",
+                    "value": "8881"
+                },
+               {
+                   "name": "SPARK_CONF_DIR",
+                   "value": "${WORKER_CONF_FOLDER}"
+               },
+               {
+                   "name": "SPARK_RPC_AUTHENTICATION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_RPC_ENCRYPTION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_SSL_ENABLED",
+                   "value": "no"
+               }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "${CLOUD_WATCH_GROUP}",
+                    "awslogs-region": "${CLOUD_WATCH_REGION}",
+                    "awslogs-stream-prefix": "spark-worker"
+                }
+            },
+            "essential": true
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "${WORKER_CPU}",
+    "memory": "${WORKER_MEMORY_MB}"
+}

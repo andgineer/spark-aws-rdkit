@@ -1,0 +1,55 @@
+{
+    "family": "spark-submit",
+    "executionRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "spark-submit",
+            "image": "${SUBMIT_IMAGE}",
+            "portMappings": [
+                {
+                    "containerPort": 4040,
+                    "hostPort": 4040,
+                    "protocol": "tcp"
+                }
+            ],
+           "environment": [
+               {
+                   "name": "SPARK_MASTER_URL",
+                   "value": "spark://${MASTER_FULL_NAME}:7077"
+               },
+               {
+                   "name": "SPARK_RPC_AUTHENTICATION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_RPC_ENCRYPTION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_SSL_ENABLED",
+                   "value": "no"
+               }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "${CLOUD_WATCH_GROUP}",
+                    "awslogs-region": "${CLOUD_WATCH_REGION}",
+                    "awslogs-stream-prefix": "spark-worker"
+                }
+            },
+            "essential": true
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "${SUBMIT_CPU}",
+    "memory": "${SUBMIT_MEMORY_MB}"
+}

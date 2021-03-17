@@ -1,0 +1,120 @@
+{
+    "family": "spark-master",
+    "executionRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "spark-master",
+            "image": "${MASTER_IMAGE}",
+            "portMappings": [
+                {
+                    "containerPort": 7001,
+                    "hostPort": 7001,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7002,
+                    "hostPort": 7002,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7003,
+                    "hostPort": 7003,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7004,
+                    "hostPort": 7004,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7005,
+                    "hostPort": 7005,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7337,
+                    "hostPort": 7337,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 7077,
+                    "hostPort": 7077,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 6066,
+                    "hostPort": 6066,
+                    "protocol": "tcp"
+                }
+            ],
+           "environment": [
+               {
+                   "name": "SPARK_MASTER_WEBUI_PORT",
+                   "value": "8080"
+               },
+               {
+                   "name": "SPARK_MASTER_PORT",
+                   "value": "7077"
+               },
+               {
+                   "name": "SPARK_PUBLIC_DNS",
+                   "value": "${MASTER_FULL_NAME}"
+               },
+               {
+                   "name": "SPARK_LOCAL_IP",
+                   "value": "0.0.0.0"
+               },
+                {
+                    "name": "SPARK_MODE",
+                    "value": "master"
+                },
+               {
+                   "name": "SPARK_CONF_DIR",
+                   "value": "${MASTER_CONF_FOLDER}"
+               },
+               {
+                   "name": "SPARK_DAEMON_JAVA_OPTS",
+                   "value": "-Dspark.deploy.recoveryMode=FILESYSTEM -Dspark.deploy.recoveryDirectory=/recovery"
+               },
+               {
+                   "name": "SPARK_RPC_AUTHENTICATION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_RPC_ENCRYPTION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED",
+                   "value": "no"
+               },
+               {
+                   "name": "SPARK_SSL_ENABLED",
+                   "value": "no"
+               }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "${CLOUD_WATCH_GROUP}",
+                    "awslogs-region": "${CLOUD_WATCH_REGION}",
+                    "awslogs-stream-prefix": "spark-master"
+                }
+            },
+            "essential": true
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "${MASTER_CPU}",
+    "memory": "${MASTER_MEMORY_MB}"
+}
