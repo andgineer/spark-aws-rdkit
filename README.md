@@ -1,8 +1,10 @@
 # Apache Spark compatible with Amazon services for Data Science and Cheminformatics 
 
 This is completely functional Spark Standalone cluster.
+
+You can launch it locally with `docker-compose` or in `AWS ECS`.
  
-## docker
+## Docker-compose
 
 Current settings is for Docker on MacOS. 
 If you are on Linux change `docker.for.mac.localhost` in `.env` to `localhost`.
@@ -18,12 +20,10 @@ Spark Web UI will be available on http://localhost:8080
 [pyspark](https://realpython.com/pyspark-intro/) can access spark://localhost:7077 
 (`setMaster('spark://localhost:7077')`).
 
-There is example how to start Spark jobs, it starts automatically with the cluster and you will see the output. 
-For detailes see `src/`.
+# Example
 
-This Spark installation is compatible with Amazon cloud. I installes all libs you need so you can use `boto3` and access
-any AWS resources - just place your AWS credentials inside the container, or run it as Fargate task with appropriate IAM
-role.
+Docker compose also stars, in separate container `submit`, an example how to submit Spark jobs. 
+For details see `src/`.
 
 ### Docker images
 - [andgineer/spark-aws](https://hub.docker.com/repository/docker/andgineer/spark-aws):  Spark 3 and Hadoop 3 so you can access Amazon services from it.
@@ -37,6 +37,8 @@ For faster conda dependency install I use [mamba](https://github.com/mamba-org/m
 ## AWS ECS
 
 This Apache Spark containers also tested with AWS ESC (Amazon Container Orchestration Service).
+
+I installed all libs you need to access AWS resources with `boto3`.
 
 See scripts and `README.md` in `ecs/`.
 You fill configuration into `config.sh` and after that you can create Spark cluster in AWS ESC completely automatically.
