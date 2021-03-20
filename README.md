@@ -1,6 +1,7 @@
-# Apache Spark compatible with Amazon services for Data Science and Cheminformatics 
+# Apache Spark compatible with Amazon services. With pyspark conda environment for Data Science and Cheminformatics 
 
 This is completely functional Spark Standalone cluster compatible with AWS services like S3.
+Also Python conda environment is installed with pyspark, pandas, [RDKit](https://www.rdkit.org) and so on. 
 
 You can launch it locally with `docker-compose` or in Amazon cloud `AWS ECS`.
 
