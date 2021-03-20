@@ -1,31 +1,31 @@
 #! /usr/bin/env bash
 # Functions for ASW ECS cluster
 
-source aws/${AWS_ACCOUNT}/environment.sh
+source "ecs/${AWS_ACCOUNT}/config.sh"
 
 function last_task_def () {
-  # returns the latest definition for task with name from the func argument
+  # returns the latest definition for task with name $1
   aws ecs list-task-definitions --output text \
         | grep -o "$1:[0-9]\+" \
         | tail -1
 }
 
 function elb_target_arn () {
-  # returns ARN for the target group with name in the func argument
+  # returns ARN for the target group with name $1
   aws elbv2 describe-target-groups --names $1 \
     | grep -o '"TargetGroupArn": "arn:aws:elasticloadbalancing:[^"]\+"' \
     | sed -E 's/"TargetGroupArn": "(.*)"/\1/'
 }
 
 function join () {
-  # Join array ($2) items with separator ($1)
+  # Join $2 array items with separator $1
   local IFS="$1"  # set internal field separator locally so we wont break the world
   shift  # now $2 becomes $1
   echo "$*"  # print second argument as array
 }
 
 function elb_arn () {
-  # returns ARN for load balancer with name in first argument
+  # returns ARN for load balancer with name $1
   aws elbv2 describe-load-balancers --names $1 \
     | grep -o '"LoadBalancerArn": "arn:aws:elasticloadbalancing:[^"]\+"' \
     | sed -E 's/"LoadBalancerArn": "(.*)"/\1/'
@@ -33,22 +33,18 @@ function elb_arn () {
 
 
 function elb_dns () {
-  # returns DNS name for load balancer with name in first argument
+  # returns DNS name for load balancer with name $1
   aws elbv2 describe-load-balancers --names $1 \
     | grep -o '"DNSName": "[^"]\+"' \
     | sed -E 's/"DNSName": "(.*)"/\1/'
 }
 
 function listeners_arns () {
-  # returns ARNs for listeners of load balancer with name in first argument
+  # returns ARNs for listeners of load balancer with name $1
   aws elbv2 describe-listeners --load-balancer-arn "$(elb_arn $1)" \
     | grep -o '"ListenerArn": "arn:aws:elasticloadbalancing:[^"]\+"' \
     | sed -E 's/"ListenerArn": "(.*)"/\1/'
 }
-
-#function task_definition_arn () {
-#  | grep -o '"taskDefinitionArn": "[^"]*"'
-#  }
 
 function substitute_vars () {
   # Get file as $1, create copy of it in temp folder and substitute in the copy all env vars defined in
@@ -75,7 +71,7 @@ function substitute_vars () {
 
 function task_status () {
   # Return Status (PROVISIONING/PENDING/RUNNING/DEPROVISIONING/STOPPED) of the task container for a task with ARN in $1
-  aws ecs describe-tasks --cluster "${CLUSTER}" --tasks "$1" \
+  aws ecs describe-tasks --cluster "${CLUSTER_NAME}" --tasks "$1" \
     | grep -o '"lastStatus": "[^"]\+"' \
     | sed -E 's/"lastStatus": "(.*)"/\1/' \
     | tail -1  # there is status of the container with the same name

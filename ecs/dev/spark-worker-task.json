@@ -52,7 +52,7 @@
            "environment": [
                {
                    "name": "SPARK_MASTER_URL",
-                   "value": "spark://${MASTER_FULL_NAME}:7077"
+                   "value": "spark://${MASTER_SERVICE_DISCOVERY_NAME}:7077"
                },
               {
                    "name": "SPARK_LOCAL_IP",

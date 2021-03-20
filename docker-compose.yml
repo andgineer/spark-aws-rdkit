@@ -10,7 +10,7 @@ services:
     environment:
       SPARK_MODE: master
       SPARK_LOCAL_HOSTNAME: spark-master
-      SPARK_CONF_DIR: /conf/driver
+      SPARK_CONF_DIR: /conf/master
       SPARK_PUBLIC_DNS: $SPARK_PUBLIC_DNS
       SPARK_MASTER_PORT: 7077
       SPARK_MASTER_WEBUI_PORT: 8080

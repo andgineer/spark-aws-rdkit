@@ -65,7 +65,7 @@
                },
                {
                    "name": "SPARK_PUBLIC_DNS",
-                   "value": "${MASTER_FULL_NAME}"
+                   "value": "${MASTER_SERVICE_DISCOVERY_NAME}"
                },
                {
                    "name": "SPARK_LOCAL_IP",

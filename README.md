@@ -38,5 +38,5 @@ For faster conda dependency install I use [mamba](https://github.com/mamba-org/m
 
 This Apache Spark containers also tested with AWS ESC (Amazon Container Orchestration Service).
 
-See scripts and `README.md` in `aws/`.
-You fill configuration into `environment.sh` and after that you can create Spark cluster in AWS ESC completely automatically.
+See scripts and `README.md` in `ecs/`.
+You fill configuration into `config.sh` and after that you can create Spark cluster in AWS ESC completely automatically.

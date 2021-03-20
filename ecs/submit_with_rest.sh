@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 REST_SERVER="localhost:6066"
-echo "Send job to Spark cluster by REST API at ${REST_SERVER}"
-echo "\n(!) Please check that the REST service is enabled"
-echo "- set spark.master.rest.enabled in Spark config\n"
+echo "Sabmit job to Spark cluster by REST API at ${REST_SERVER}"
+echo "\REST service should be enabled"
+echo "(spark.master.rest.enabled in Spark node's conf/)\n"
 
 curl -X POST http://${REST_SERVER}/v1/submissions/create \
   --header "Content-Type:application/json;charset=UTF-8" \
