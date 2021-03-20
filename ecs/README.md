@@ -37,7 +37,7 @@ Create and start Spark cluster in AWS ECS using this images:
 
     ecs/create_cluster.sh
 
-Run submit container `docker/submit` on the cluster
+Run submit container `docker/submit` on the cluster:
 
     ecs/submit.sh
 
