@@ -31,7 +31,7 @@ If you are on Linux change `docker.for.mac.localhost` in `.env` to `localhost`.
 
 ## AWS ECS
 
-This Apache Spark containers also tested with AWS ESC (Amazon Container Orchestration Service).
+This Apache Spark containers also tested with AWS ECS (Amazon Container Orchestration Service).
 
 See scripts and `README.md` in `ecs/`.
 
