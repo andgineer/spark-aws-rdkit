@@ -29,7 +29,7 @@ jobs:
       - name: Build spark-aws and push to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: ./spark-aws
+          context: ./docker/spark-aws
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws:latest
@@ -39,7 +39,7 @@ jobs:
       - name: Build spark-aws-conda and push to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: ./spark-aws-conda
+          context: ./docker/spark-aws-conda
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-conda:latest
@@ -50,7 +50,7 @@ jobs:
       - name: Build spark-aws-rdkit and push to docker hub
         uses: docker/build-push-action@v4
         with:
-          context: ./spark-aws-rdkit
+          context: ./docker/spark-aws-rdkit
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-rdkit:latest
