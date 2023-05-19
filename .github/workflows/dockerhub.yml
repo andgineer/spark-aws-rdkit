@@ -30,7 +30,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./docker/spark-aws
-          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws:latest
           cache-from: type=registry,ref=user/app:latest
@@ -40,7 +39,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./docker/spark-aws-conda
-          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-conda:latest
           cache-from: type=registry,ref=user/app:latest
@@ -51,7 +49,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./docker/spark-aws-rdkit
-          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-rdkit:latest
           cache-from: type=registry,ref=user/app:latest
