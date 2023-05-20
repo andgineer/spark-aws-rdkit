@@ -1,5 +1,7 @@
 FROM andgineer/spark-aws-rdkit
 
+ARG USER_NAME=spark
+
 USER root
 
 COPY --chown=${USER_NAME} start.sh /scripts/

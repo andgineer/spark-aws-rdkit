@@ -85,4 +85,6 @@ services:
       SPARK_SSL_ENABLED: "no"
     depends_on:
       - spark-master
+      - spark-worker
+      - spark-coworker
 
