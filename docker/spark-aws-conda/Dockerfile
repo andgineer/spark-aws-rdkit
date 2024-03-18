@@ -40,7 +40,7 @@ RUN apt-get update -q && \
     && find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.js.map' -delete \
     && /opt/conda/bin/conda clean -afy \
-    && chown -R $USER_NAME /opt/conda
+    && chown -R $USER_NAME /opt/conda && chmod -R g+rwx /opt/conda/
 
 USER $USER_NAME
 COPY --chown=${USER_NAME} environment.yml /envs/

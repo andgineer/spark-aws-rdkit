@@ -4,4 +4,4 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - rdkit=2019.03.1.0
+  - rdkit
