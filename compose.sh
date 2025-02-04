@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Runs docker-compose with all necessary env vars
+# Runs docker compose with all necessary env vars
 #
 # Example:
 #   ./compose.sh up
@@ -9,4 +9,4 @@
 # For that we pass USER_GROUP to `docker-compose` and use the group for the containers user.
 export USER_GROUP="$(id -g)"
 
-docker-compose "$@"
+docker compose "$@"

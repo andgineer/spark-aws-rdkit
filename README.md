@@ -1,39 +1,72 @@
-# Apache Spark compatible with Amazon services. With pyspark conda environment for Data Science and Cheminformatics 
+# Docker-based PySpark cluster with AWS services and RDKit
 
-This is fully functional Spark Standalone cluster compatible with AWS services like S3.
-Also Python conda environment is installed with pyspark, pandas, [RDKit](https://www.rdkit.org) and so on. 
+Enterprise-ready Apache Spark standalone cluster with 
+AWS services integration (S3, etc.) and comprehensive Data Science environment 
+including PySpark, Pandas, and RDKit for cheminformatics.
 
-You can launch it locally with `docker-compose` or in Amazon cloud `AWS ECS`.
+## Features
 
-## PySpark example
+- Apache Spark cluster in standalone mode
+- Full AWS services compatibility (S3, etc.)
+- Conda environment with Data Science tools:
+  - PySpark
+  - Pandas
+  - RDKit for cheminformatics (https://www.rdkit.org) 
+- Deployment options:
+  - Local with `docker compose`
+  - Cloud with AWS ECS
 
-Separate container `submit` will wait for Spark cluster availability and after that it will
-run PySpark example. The example shows how to submit Spark jobs to the cluster. 
-For details see `src/`.
+## Quick Start
 
-## Docker-compose
+Launch locally with `docker compose`:
 
-    ./compose.sh up --build
-    
-That will start Spark Master and two Workers, and example in `submit`.
+\```bash
+./compose.sh up --build
+\```
 
-Spark Web UI will be available on http://localhost:8080
+This starts:
+- Spark Master
+- Two Spark Workers
+- Example job container (`submit`)
 
-Spark Driver on spark://localhost:7077
-(PySpark: `setMaster('spark://localhost:7077')`).
+Access points:
+- Spark Web UI: http://localhost:8080
+- Spark Driver: `spark://localhost:7077`
+  - For PySpark use `setMaster('spark://localhost:7077')`
 
-Current settings are for Docker on MacOS. 
-If you are on Linux change `docker.for.mac.localhost` in `.env` to `localhost`.
+> Note: On Linux, change `docker.for.mac.localhost` to `localhost` in `.env` file.
 
-### Docker images
-- [andgineer/spark-aws](https://hub.docker.com/r/andgineer/spark-aws):  Spark 3 and Hadoop 3 so you can access Amazon services from it.
-- [andgineer/spark-aws-conda](https://hub.docker.com/r/andgineer/spark-aws-conda): adds on top of that Anaconda with Pandas.
-- [andgineer/spark-aws-rdkit](https://hub.docker.com/r/andgineer/spark-aws-rdkit) : adds [RDKit](https://www.rdkit.org).
+## Example PySpark Application
 
-## AWS ECS
+The `submit` container demonstrates how to:
+- Connect to the Spark cluster
+- Submit Spark jobs
+- Process data with PySpark
 
-This Apache Spark containers also tested with AWS ECS (Amazon Container Orchestration Service).
+Check `src/` directory for the implementation details.
 
-See scripts and `README.md` in `ecs/`.
+## Docker Images
 
-You fill configuration into `config.sh` and after that you can create Spark cluster in AWS ESC completely automatically.
+We provide a set of specialized Docker images:
+
+1. **[andgineer/spark-aws](https://hub.docker.com/r/andgineer/spark-aws)**
+   - Base image with Spark 3 and Hadoop 3
+   - AWS services integration
+
+2. **[andgineer/spark-aws-conda](https://hub.docker.com/r/andgineer/spark-aws-conda)**
+   - Extends base image
+   - Adds Anaconda with Pandas
+
+3. **[andgineer/spark-aws-rdkit](https://hub.docker.com/r/andgineer/spark-aws-rdkit)**
+   - Adds RDKit for cheminformatics
+   - Complete Data Science environment
+
+## AWS ECS Deployment
+
+For production deployment on AWS Elastic Container Service (ECS):
+
+1. Navigate to `ecs/` directory
+2. Configure your deployment in `config.sh`
+3. Run the automated deployment scripts
+
+Detailed instructions available in `ecs/README.md`.
