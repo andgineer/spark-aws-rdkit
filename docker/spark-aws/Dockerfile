@@ -4,25 +4,25 @@ ARG SPARK_VERSION=3.5.2
 ARG HADOOP_VERSION=3.3.6
 ARG JAVA_JDK=openjdk-17-jre
 
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
 # non-root user for the container
 ARG USER_NAME=spark
 
 # http://blog.stuart.axelbrooke.com/python-3-on-spark-return-of-the-pythonhashseed
-ENV PYTHONHASHSEED 0
-ENV PYTHONIOENCODING UTF-8
-ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+ENV PYTHONHASHSEED=0
+ENV PYTHONIOENCODING=UTF-8
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
-ENV HADOOP_HOME /usr/hadoop-$HADOOP_VERSION
-ENV HADOOP_CONF_DIR $HADOOP_HOME/etc/hadoop
-ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
-ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
-ENV SPARK_DIST_CLASSPATH $HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*
+ENV HADOOP_HOME=/usr/hadoop-$HADOOP_VERSION
+ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-without-hadoop
+ENV SPARK_HOME=/usr/spark-${SPARK_VERSION}
+ENV SPARK_DIST_CLASSPATH=$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*
 
 # For Linux change to "localhost"
-ENV SPARK_PUBLIC_DNS docker.for.mac.localhost
+ENV SPARK_PUBLIC_DNS=docker.for.mac.localhost
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales \
  && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
@@ -54,7 +54,7 @@ USER $USER_NAME
 
 COPY conf /conf
 
-ENV PATH $PATH:$HADOOP_HOME/bin:${SPARK_HOME}/bin
+ENV PATH=$PATH:$HADOOP_HOME/bin:${SPARK_HOME}/bin
 SHELL ["/bin/bash", "-c"]
 WORKDIR $SPARK_HOME
 CMD /scripts/start.sh

@@ -15,7 +15,7 @@ USER root
 
 RUN apt-get update -q && \
     apt-get install -q -y \
-        bzip2 ca-certificates git libglib2.0-0 libsm6 libxext6 libxrender1 mercurial subversion wget \
+        bzip2 ca-certificates git libglib2.0-0 libsm6 libxext6 libxrender1 libarchive13 mercurial subversion wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && echo "Downloading Miniconda3-${CONDA_VERSION} for ${TARGETPLATFORM}..." \
@@ -44,15 +44,16 @@ RUN apt-get update -q && \
 
 USER $USER_NAME
 COPY --chown=${USER_NAME} environment.yml /envs/
+# mamba version is pinned because of problem https://github.com/conda/conda-libmamba-solver/issues/540
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "source activate $CONDA_ENV" >> ~/.bashrc \
-    && /opt/conda/bin/conda install mamba -n base -c conda-forge \
+    && /opt/conda/bin/conda install 'mamba<2.0.0' -n base -c conda-forge \
     && /opt/conda/bin/conda info --envs \
     && /opt/conda/bin/mamba env create --file /envs/environment.yml
 
 VOLUME /python
 
-ENV PATH /opt/conda/envs/$CONDA_ENV/bin:/opt/conda/bin:$PATH
-ENV CONDA_DEFAULT_ENV $CONDA_ENV
-ENV PYTHONPATH ${SPARK_HOME}/python/:$SPARK_HOME/python/lib:$PYTHONPATH:/python/
+ENV PATH=/opt/conda/envs/$CONDA_ENV/bin:/opt/conda/bin:$PATH
+ENV CONDA_DEFAULT_ENV=$CONDA_ENV
+ENV PYTHONPATH=${SPARK_HOME}/python/:$SPARK_HOME/python/lib:/python/
 
