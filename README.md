@@ -1,6 +1,6 @@
 # Docker-based PySpark cluster with AWS services and RDKit
 
-Enterprise-ready Apache Spark standalone cluster with 
+Docker-based Apache Spark standalone cluster with 
 AWS services integration (S3, etc.) and comprehensive Data Science environment 
 including PySpark, Pandas, and RDKit for cheminformatics.
 
@@ -20,9 +20,9 @@ including PySpark, Pandas, and RDKit for cheminformatics.
 
 Launch locally with `docker compose`:
 
-\```bash
+```bash
 ./compose.sh up --build
-\```
+```
 
 This starts:
 - Spark Master
@@ -45,9 +45,19 @@ The `submit` container demonstrates how to:
 
 Check `src/` directory for the implementation details.
 
+## AWS ECS Deployment
+
+For production deployment on AWS Elastic Container Service (ECS):
+
+1. Navigate to `ecs/` directory
+2. Configure your deployment in `config.sh`
+3. Run the automated deployment scripts
+
+Detailed instructions available in `ecs/README.md`.
+
 ## Docker Images
 
-We provide a set of specialized Docker images:
+Public Docker images available on Docker Hub, no need to build locally:
 
 1. **[andgineer/spark-aws](https://hub.docker.com/r/andgineer/spark-aws)**
    - Base image with Spark 3 and Hadoop 3
@@ -61,12 +71,3 @@ We provide a set of specialized Docker images:
    - Adds RDKit for cheminformatics
    - Complete Data Science environment
 
-## AWS ECS Deployment
-
-For production deployment on AWS Elastic Container Service (ECS):
-
-1. Navigate to `ecs/` directory
-2. Configure your deployment in `config.sh`
-3. Run the automated deployment scripts
-
-Detailed instructions available in `ecs/README.md`.
