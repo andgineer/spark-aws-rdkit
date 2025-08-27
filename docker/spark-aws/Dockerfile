@@ -2,7 +2,7 @@ FROM debian:stable-slim
 
 ARG SPARK_VERSION=3.5.2
 ARG HADOOP_VERSION=3.3.6
-ARG JAVA_JDK=openjdk-17-jre
+ARG JAVA_JDK=openjdk-17-jre-headless
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
