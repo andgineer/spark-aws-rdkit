@@ -8,7 +8,7 @@ including PySpark, Pandas, and RDKit for cheminformatics.
 
 - Apache Spark cluster in standalone mode
 - Full AWS services compatibility (S3, etc.)
-- Conda environment with Data Science tools:
+- Conda environment with data science tools:
   - PySpark
   - Pandas
   - RDKit for cheminformatics (https://www.rdkit.org) 
@@ -32,7 +32,7 @@ This starts:
 Access points:
 - Spark Web UI: http://localhost:8080
 - Spark Driver: `spark://localhost:7077`
-  - For PySpark use `setMaster('spark://localhost:7077')`
+  - For PySpark, use `setMaster('spark://localhost:7077')`
 
 > Note: On Linux, change `docker.for.mac.localhost` to `localhost` in `.env` file.
 
@@ -43,7 +43,7 @@ The `submit` container demonstrates how to:
 - Submit Spark jobs
 - Process data with PySpark
 
-Check `src/` directory for the implementation details.
+Check the `src/` directory for implementation details.
 
 ## AWS ECS Deployment
 
@@ -57,7 +57,7 @@ Detailed instructions available in `ecs/README.md`.
 
 ## Docker Images
 
-Public Docker images available on Docker Hub, no need to build locally:
+Public Docker images are available on Docker Hub—no need to build locally:
 
 1. **[andgineer/spark-aws](https://hub.docker.com/r/andgineer/spark-aws)**
    - Base image with Spark 3 and Hadoop 3
@@ -69,5 +69,5 @@ Public Docker images available on Docker Hub, no need to build locally:
 
 3. **[andgineer/spark-aws-rdkit](https://hub.docker.com/r/andgineer/spark-aws-rdkit)**
    - Adds RDKit for cheminformatics
-   - Complete Data Science environment
+   - Complete data science environment
 
