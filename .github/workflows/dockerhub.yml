@@ -153,7 +153,7 @@ jobs:
         run: |
           gh release create "$RELEASE_TAG" \
             --title "Release ${{ steps.datetime.outputs.release_name }}" \
-            --notes "$(cat <<'EOF'
+            --notes "$(cat <<EOF
           ## Docker Images Released on ${RELEASE_DATE}
 
           ### Spark Version: ${SPARK_VERSION}
