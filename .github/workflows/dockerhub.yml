@@ -12,10 +12,19 @@ jobs:
   # Job 1: Build base Spark-AWS image
   build-spark-aws:
     runs-on: ubuntu-latest
+    outputs:
+      spark_version: ${{ steps.get_version.outputs.spark_version }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Get Spark version
+        id: get_version
+        run: |
+          SPARK_VERSION=$(grep "ARG SPARK_VERSION=" docker/spark-aws/Dockerfile | cut -d'=' -f2)
+          echo "spark_version=$SPARK_VERSION" >> $GITHUB_OUTPUT
+          echo "Spark version: $SPARK_VERSION"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -35,7 +44,9 @@ jobs:
         with:
           context: ./docker/spark-aws
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws:latest
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws:spark-${{ steps.get_version.outputs.spark_version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: |-
@@ -46,7 +57,7 @@ jobs:
   build-spark-aws-conda:
     needs: build-spark-aws
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -69,7 +80,9 @@ jobs:
         with:
           context: ./docker/spark-aws-conda
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-conda:latest
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-conda:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-conda:spark-${{ needs.build-spark-aws.outputs.spark_version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: |-
@@ -78,9 +91,9 @@ jobs:
 
   # Job 3: Build RDKit image (depends on conda)
   build-spark-aws-rdkit:
-    needs: build-spark-aws-conda
+    needs: [build-spark-aws]
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -103,9 +116,59 @@ jobs:
         with:
           context: ./docker/spark-aws-rdkit
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-rdkit:latest
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-rdkit:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/spark-aws-rdkit:spark-${{ needs.build-spark-aws.outputs.spark_version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: |-
             linux/amd64
             linux/arm64
+
+  # Job 4: Create GitHub Release with Docker image links
+  create-release:
+    needs: [build-spark-aws, build-spark-aws-conda, build-spark-aws-rdkit]
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get current date and time
+        id: datetime
+        run: |
+          echo "release_name=$(date +'%Y-%m-%d-%H%M%S')" >> $GITHUB_OUTPUT
+          echo "release_date=$(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
+
+      - name: Create Release with gh CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          SPARK_VERSION: ${{ needs.build-spark-aws.outputs.spark_version }}
+          RELEASE_TAG: release-${{ steps.datetime.outputs.release_name }}
+          RELEASE_DATE: ${{ steps.datetime.outputs.release_date }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            --title "Release ${{ steps.datetime.outputs.release_name }}" \
+            --notes "$(cat <<'EOF'
+          ## Docker Images Released on ${RELEASE_DATE}
+
+          ### Spark Version: ${SPARK_VERSION}
+
+          All images are available for \`linux/amd64\` and \`linux/arm64\` platforms.
+
+          ### Images:
+
+          #### 1. spark-aws (Base Spark + Hadoop + AWS)
+          [\`docker pull ${DOCKER_USERNAME}/spark-aws:spark-${SPARK_VERSION}\`](https://hub.docker.com/r/${DOCKER_USERNAME}/spark-aws/tags)
+
+          #### 2. spark-aws-conda (Spark + Anaconda + Pandas)
+          [\`docker pull ${DOCKER_USERNAME}/spark-aws-conda:spark-${SPARK_VERSION}\`](https://hub.docker.com/r/${DOCKER_USERNAME}/spark-aws-conda/tags)
+
+          #### 3. spark-aws-rdkit (Spark + RDKit for Cheminformatics)
+          [\`docker pull ${DOCKER_USERNAME}/spark-aws-rdkit:spark-${SPARK_VERSION}\`](https://hub.docker.com/r/${DOCKER_USERNAME}/spark-aws-rdkit/tags)
+          EOF
+          )"
