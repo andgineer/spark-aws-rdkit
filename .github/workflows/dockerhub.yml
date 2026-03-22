@@ -91,7 +91,7 @@ jobs:
 
   # Job 3: Build RDKit image (depends on conda)
   build-spark-aws-rdkit:
-    needs: [build-spark-aws]
+    needs: [build-spark-aws, build-spark-aws-conda]
     runs-on: ubuntu-latest
 
     steps:
@@ -110,6 +110,24 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build spark-aws-rdkit for smoke test (amd64, local)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker/spark-aws-rdkit
+          push: false
+          load: true
+          tags: spark-aws-rdkit:smoke-test
+          cache-from: type=gha
+          platforms: linux/amd64
+
+      - name: Run smoke tests
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/src:/python" \
+            -e PYSPARK_PYTHON=python3 \
+            spark-aws-rdkit:smoke-test \
+            python /python/smoke_test.py
 
       - name: Build spark-aws-rdkit and push to docker hub
         uses: docker/build-push-action@v5

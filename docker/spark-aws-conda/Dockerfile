@@ -3,9 +3,9 @@ FROM andgineer/spark-aws
 # set by Docker Buildx
 ARG TARGETPLATFORM
 
-ARG CONDA_VERSION=py312_24.1.2-0
-ARG CONDA_SHA256_x86_64="b978856ec3c826eb495b60e3fffe621f670c101150ebcbdeede4f961f22dc438"
-ARG CONDA_SHA256_aarch64="942a057a52ec99f0fca4f413b87b332f6e61fad95c05fa7cabc003ae0b4471de"
+ARG CONDA_VERSION=py313_26.1.1-1
+ARG CONDA_SHA256_x86_64="f6dfb5b59614fd7b2956b240b2575a9d58203ec7f7a99f85128158a0fdc5c1d7"
+ARG CONDA_SHA256_aarch64="07c82b5aec04d5f0f3e4b246835b6bc85e104821cbcb0a059c7ea80f028503f4"
 
 ARG CONDA_ENV=spark
 
@@ -44,10 +44,9 @@ RUN apt-get update -q && \
 
 USER $USER_NAME
 COPY --chown=${USER_NAME} environment.yml /envs/
-# mamba version is pinned because of problem https://github.com/conda/conda-libmamba-solver/issues/540
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "source activate $CONDA_ENV" >> ~/.bashrc \
-    && /opt/conda/bin/conda install 'mamba<2.0.0' -n base -c conda-forge \
+    && /opt/conda/bin/conda install 'mamba>=2.3.0' -n base -c conda-forge \
     && /opt/conda/bin/conda info --envs \
     && /opt/conda/bin/mamba env create --file /envs/environment.yml
 

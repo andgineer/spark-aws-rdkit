@@ -1,8 +1,8 @@
 FROM debian:bookworm-slim
 
-ARG SPARK_VERSION=3.5.4
-ARG HADOOP_VERSION=3.4.1
-ARG JAVA_JDK=openjdk-17-jre-headless
+ARG SPARK_VERSION=3.5.8
+ARG HADOOP_VERSION=3.4.3
+ARG JAVA_JDK=openjdk-21-jre-headless
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
