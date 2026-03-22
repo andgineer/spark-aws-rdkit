@@ -1,7 +1,5 @@
 name: spark
 channels:
-  - rdkit
-  - defaults
   - conda-forge
 dependencies:
   - rdkit

@@ -1,6 +1,5 @@
 name: spark
 channels:
-  - defaults
   - conda-forge
 dependencies:
   - boto3

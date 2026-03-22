@@ -46,6 +46,7 @@ USER $USER_NAME
 COPY --chown=${USER_NAME} environment.yml /envs/
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "source activate $CONDA_ENV" >> ~/.bashrc \
+    && /opt/conda/bin/conda config --system --remove channels defaults \
     && /opt/conda/bin/conda install 'mamba>=2.3.0' -n base -c conda-forge \
     && /opt/conda/bin/conda info --envs \
     && /opt/conda/bin/mamba env create --file /envs/environment.yml
