@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ARG SPARK_VERSION=3.5.8
 ARG HADOOP_VERSION=3.4.3
