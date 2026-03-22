@@ -6,7 +6,7 @@ ARG USER_NAME=spark
 COPY --chown=${USER_NAME} environment.yml /envs/environment.yml
 RUN conda info --envs \
     && mamba env update --name "$CONDA_ENV" --file /envs/environment.yml \
-    && conda clean -afy \
+    && conda clean -ay \
     && conda list --name "$CONDA_ENV"
 
 
