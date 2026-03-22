@@ -47,9 +47,15 @@ COPY --chown=${USER_NAME} environment.yml /envs/
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "source activate $CONDA_ENV" >> ~/.bashrc \
     && /opt/conda/bin/conda config --system --remove channels defaults \
-    && /opt/conda/bin/conda install 'mamba>=2.3.0' -n base -c conda-forge \
+    && echo "=== solver ===" \
+    && /opt/conda/bin/conda config --show solver \
+    && echo "=== envs_dirs ===" \
+    && /opt/conda/bin/conda config --show envs_dirs \
+    && echo "=== creating env ===" \
+    && /opt/conda/bin/conda env create --file /envs/environment.yml \
+    && echo "=== after create ===" \
     && /opt/conda/bin/conda info --envs \
-    && /opt/conda/bin/mamba env create --file /envs/environment.yml
+    && /opt/conda/bin/conda list -n "$CONDA_ENV"
 
 VOLUME /python
 
